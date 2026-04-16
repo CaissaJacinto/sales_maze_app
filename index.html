@@ -2,184 +2,360 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Sales Maze – CCM Consultancy</title>
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Segoe UI',Arial,sans-serif;background:#1a1a2e;color:#eee;min-height:100vh;display:flex;flex-direction:column;align-items:center}
-  #app{width:100%;max-width:760px;padding:16px}
-  .header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#111;border-radius:10px;margin-bottom:14px;border:1px solid #333}
-  .logo{display:flex;align-items:center;gap:10px}
-  .logo-text{font-size:22px;font-weight:900;color:#e63946;letter-spacing:-1px}
-  .logo-sub{font-size:9px;letter-spacing:3px;color:#aaa;display:block;margin-top:-4px}
-  .timer-box{text-align:right}
-  .timer-label{font-size:11px;color:#aaa;letter-spacing:1px}
-  .timer-val{font-size:28px;font-weight:700;color:#f4a261;font-variant-numeric:tabular-nums}
-  .progress-bar{background:#222;border-radius:6px;height:6px;margin-bottom:12px;overflow:hidden}
-  .progress-fill{height:100%;background:linear-gradient(90deg,#e63946,#f4a261);border-radius:6px;transition:width .5s}
-  .scene-card{background:#16213e;border-radius:12px;padding:20px;margin-bottom:12px;border:1px solid #2a2a5a}
-  .scene-tag{font-size:10px;letter-spacing:2px;color:#f4a261;text-transform:uppercase;margin-bottom:8px}
-  .scene-title{font-size:18px;font-weight:700;color:#fff;margin-bottom:10px;line-height:1.4}
-  .scene-body{font-size:14px;line-height:1.7;color:#c9c9e0}
-  .dialogue{margin:6px 0;padding-left:12px;border-left:2px solid #2a2a5a}
-  .speaker{color:#f4a261;font-weight:600}
-  .feedback-banner{border-radius:8px;padding:12px 14px;margin-top:12px;font-size:13px;line-height:1.6}
-  .feedback-banner.wrong{background:#3a1212;border:1px solid #8b0000;color:#ffaaaa}
-  .feedback-banner.info{background:#1a2040;border:1px solid #3a4a8a;color:#aac0ff}
-  .choices{display:flex;flex-direction:column;gap:8px}
-  .choice-btn{background:#0f3460;border:1px solid #1a4a8a;color:#d0e4ff;border-radius:8px;padding:12px 16px;font-size:14px;line-height:1.5;cursor:pointer;text-align:left;transition:all .2s;display:flex;align-items:flex-start;gap:10px}
-  .choice-btn:hover{background:#1a4a8a;border-color:#4a7fc1;color:#fff}
-  .choice-label{min-width:22px;height:22px;border-radius:50%;background:#1a4a8a;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#7ab3ff;flex-shrink:0;margin-top:1px}
-  .choice-btn:hover .choice-label{background:#e63946;color:#fff}
-  .meta-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-  .mistakes{font-size:12px;color:#c44}
-  .step-count{font-size:12px;color:#aaa}
-  .crumbs{font-size:11px;color:#555;margin-bottom:10px}
-  .crumb-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#333;margin:0 2px;vertical-align:middle}
-  .crumb-dot.correct{background:#1a7a40}
-  .crumb-dot.wrong{background:#8b0000}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#1a1a2e;color:#eee;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+#app{width:100%;max-width:720px;padding:14px}
 
-  /* Name entry modal */
-  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;z-index:100}
-  .modal{background:#16213e;border:1px solid #2a2a5a;border-radius:14px;padding:28px;width:90%;max-width:380px;text-align:center}
-  .modal h2{font-size:20px;color:#fff;margin-bottom:8px}
-  .modal p{font-size:13px;color:#aaa;margin-bottom:18px}
-  .modal input{width:100%;padding:10px 14px;border-radius:8px;border:1px solid #2a5a8a;background:#0f2040;color:#fff;font-size:15px;margin-bottom:14px;outline:none}
-  .modal input:focus{border-color:#f4a261}
-  .modal-btn{background:#e63946;color:#fff;border:none;padding:11px 0;width:100%;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer}
-  .modal-btn:hover{background:#c0252f}
+/* Header */
+.header{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;background:#111;border-radius:10px;margin-bottom:12px;border:1px solid #252535}
+.logo{display:flex;align-items:center;gap:9px}
+.logo-text{font-size:20px;font-weight:900;color:#e63946;letter-spacing:-1px}
+.logo-sub{font-size:8px;letter-spacing:3px;color:#888;display:block;margin-top:-3px}
+.header-right{display:flex;align-items:center;gap:12px}
+.timer-box{text-align:right}
+.timer-label{font-size:10px;color:#777;letter-spacing:1px}
+.timer-val{font-size:24px;font-weight:700;color:#f4a261;font-variant-numeric:tabular-nums}
+.timer-val.paused{color:#555}
+.lb-btn{background:transparent;color:#a0c0ff;border:1px solid #2a4a7a;padding:6px 12px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap}
+.lb-btn:hover{background:#1a3050}
 
-  /* Win screen */
-  .win-screen{text-align:center;padding:30px 20px;background:#16213e;border-radius:12px;border:1px solid #2a2a5a}
-  .win-icon{font-size:48px;margin-bottom:12px}
-  .win-title{font-size:26px;font-weight:800;color:#f4a261;margin-bottom:8px}
-  .win-sub{font-size:14px;color:#aaa;margin-bottom:20px}
-  .stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px}
-  .stat-card{background:#111;border-radius:8px;padding:14px;border:1px solid #333}
-  .stat-val{font-size:22px;font-weight:700;color:#f4a261}
-  .stat-label{font-size:11px;color:#888;margin-top:4px}
-  .rating-badge{display:inline-block;padding:8px 20px;border-radius:20px;font-size:15px;font-weight:700;margin-bottom:20px}
-  .rating-gold{background:#3a2800;color:#f4a261;border:1px solid #f4a261}
-  .rating-silver{background:#1a2230;color:#a0c0ff;border:1px solid #4a7fc1}
-  .rating-bronze{background:#2a1515;color:#ffaaaa;border:1px solid #c44}
-  .win-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-  .btn-primary{background:#e63946;color:#fff;border:none;padding:11px 22px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer}
-  .btn-primary:hover{background:#c0252f}
-  .btn-secondary{background:transparent;color:#a0c0ff;border:1px solid #2a4a7a;padding:11px 22px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer}
-  .btn-secondary:hover{background:#1a3050}
+/* Progress */
+.progress-wrap{margin-bottom:14px}
+.progress-bar{background:#222;border-radius:6px;height:5px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#e63946,#f4a261);border-radius:6px;transition:width .6s ease}
+.progress-label{font-size:10px;color:#555;text-align:right;margin-top:4px}
 
-  /* Leaderboard */
-  .lb-panel{background:#16213e;border-radius:12px;border:1px solid #2a2a5a;overflow:hidden;margin-top:12px}
-  .lb-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:#111;border-bottom:1px solid #2a2a5a}
-  .lb-title{font-size:16px;font-weight:700;color:#f4a261;display:flex;align-items:center;gap:8px}
-  .lb-tab-row{display:flex;gap:0;border-bottom:1px solid #2a2a5a}
-  .lb-tab{flex:1;padding:9px;text-align:center;font-size:12px;cursor:pointer;color:#aaa;border-bottom:2px solid transparent;transition:all .2s}
-  .lb-tab.active{color:#f4a261;border-bottom-color:#f4a261;background:#0d1625}
-  .lb-empty{padding:28px;text-align:center;color:#555;font-size:13px}
-  .lb-row{display:flex;align-items:center;padding:10px 16px;border-bottom:1px solid #1a2a3a;gap:12px;transition:background .2s}
-  .lb-row:hover{background:#1a2a4a}
-  .lb-row:last-child{border-bottom:none}
-  .lb-rank{font-size:18px;min-width:28px;text-align:center}
-  .lb-name{flex:1;font-size:14px;font-weight:600;color:#e0e8ff}
-  .lb-badges{display:flex;gap:6px;align-items:center}
-  .lb-badge{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700}
-  .badge-gold{background:#3a2800;color:#f4a261}
-  .badge-silver{background:#1a2230;color:#a0c0ff}
-  .badge-bronze{background:#2a1515;color:#ff8888}
-  .lb-time{font-size:13px;color:#f4a261;font-variant-numeric:tabular-nums;min-width:48px;text-align:right}
-  .lb-mistakes{font-size:11px;color:#888;min-width:60px;text-align:right}
-  .lb-eff{font-size:12px;font-weight:700;min-width:38px;text-align:right}
-  .my-row{background:#0d2040 !important;border-left:3px solid #f4a261}
+/* Welcome screen */
+.welcome{background:#16213e;border-radius:14px;padding:32px 24px;text-align:center;border:1px solid #2a2a5a}
+.welcome-icon{font-size:52px;margin-bottom:16px}
+.welcome-title{font-size:26px;font-weight:800;color:#fff;margin-bottom:8px}
+.welcome-sub{font-size:15px;color:#a0b0d0;margin-bottom:6px;line-height:1.6}
+.welcome-desc{font-size:13px;color:#667;margin-bottom:24px;line-height:1.7;max-width:480px;margin-left:auto;margin-right:auto}
+.learn-box{background:#0d1625;border-radius:10px;padding:16px 20px;margin:0 auto 24px;max-width:420px;text-align:left;border:1px solid #1a2a4a}
+.learn-title{font-size:11px;letter-spacing:2px;color:#f4a261;margin-bottom:10px}
+.learn-item{font-size:13px;color:#a0b8d8;margin-bottom:6px;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+.learn-dot{color:#e63946;font-size:16px;flex-shrink:0;margin-top:-1px}
+.start-btn{background:#e63946;color:#fff;border:none;padding:14px 36px;border-radius:9px;font-size:16px;font-weight:700;cursor:pointer;transition:all .2s}
+.start-btn:hover{background:#c0252f;transform:scale(1.03)}
+.badge-row{display:flex;gap:8px;justify-content:center;margin-bottom:20px;flex-wrap:wrap}
+.badge{font-size:11px;padding:4px 12px;border-radius:12px;font-weight:600}
+.badge-red{background:#2a0a0a;color:#f4a261;border:1px solid #5a2a2a}
+.badge-blue{background:#0a1a2a;color:#7ab3ff;border:1px solid #1a3a5a}
+.badge-green{background:#0a1a0a;color:#7dffb0;border:1px solid #1a4a2a}
+
+/* Scene */
+.scene-card{background:#16213e;border-radius:12px;padding:20px;margin-bottom:10px;border:1px solid #2a2a5a}
+.scene-tag{font-size:10px;letter-spacing:2px;color:#f4a261;text-transform:uppercase;margin-bottom:7px}
+.scene-title{font-size:17px;font-weight:700;color:#fff;margin-bottom:10px;line-height:1.4}
+.scene-body{font-size:14px;line-height:1.75;color:#c0c8e0}
+.scene-body p{margin-bottom:8px}
+.dialogue{margin:6px 0;padding:8px 12px;background:#0d1625;border-radius:6px;border-left:2px solid #2a3a6a;font-size:13px;line-height:1.6}
+.speaker{color:#f4a261;font-weight:700;font-size:12px;display:block;margin-bottom:2px}
+blockquote{margin:10px 0;padding:12px 14px;background:#0d1a2e;border-radius:8px;border-left:3px solid #f4a261;font-style:italic;color:#b0c0d8;font-size:13px;line-height:1.6}
+
+/* Feedback */
+.feedback-banner{border-radius:8px;padding:13px 15px;margin-top:10px;font-size:13px;line-height:1.65}
+.feedback-banner.wrong{background:#2a0d0d;border:1px solid #6a1a1a;color:#ffb0b0}
+.feedback-banner.info{background:#0d1528;border:1px solid #2a3a6a;color:#a0c0ff}
+.feedback-banner.coaching{background:#0d1f10;border:1px solid #1a5a2a;color:#90e0a0}
+.retry-btn{background:#e63946;color:#fff;border:none;padding:7px 16px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:700;margin-top:8px;display:inline-block}
+.retry-btn:hover{background:#c0252f}
+
+/* Choices */
+.choices{display:flex;flex-direction:column;gap:7px;margin-top:2px}
+.choice-btn{background:#0f3460;border:1px solid #1a4a8a;color:#d0e4ff;border-radius:9px;padding:12px 15px;font-size:14px;line-height:1.5;cursor:pointer;text-align:left;transition:all .18s;display:flex;align-items:flex-start;gap:10px}
+.choice-btn:hover{background:#1a4a8a;border-color:#4a7fc1;color:#fff;transform:translateX(2px)}
+.choice-label{min-width:22px;height:22px;border-radius:50%;background:#1a3a6a;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#7ab3ff;flex-shrink:0;margin-top:1px}
+.choice-btn:hover .choice-label{background:#e63946;color:#fff}
+
+/* Win */
+.win-screen{text-align:center;padding:28px 20px;background:#16213e;border-radius:14px;border:1px solid #2a2a5a}
+.win-icon{font-size:52px;margin-bottom:10px}
+.win-title{font-size:24px;font-weight:800;color:#f4a261;margin-bottom:6px}
+.win-sub{font-size:14px;color:#8a9ab8;margin-bottom:18px;line-height:1.5}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.stat-card{background:#0d1625;border-radius:9px;padding:12px 8px;border:1px solid #1a2a4a}
+.stat-val{font-size:20px;font-weight:700;color:#f4a261}
+.stat-label{font-size:10px;color:#667;margin-top:3px;line-height:1.4}
+.rating-badge{display:inline-block;padding:7px 20px;border-radius:20px;font-size:14px;font-weight:700;margin-bottom:16px}
+.rating-gold{background:#2a1a00;color:#f4a261;border:1px solid #8a6020}
+.rating-silver{background:#0f1a2a;color:#a0c0ff;border:1px solid #3a5a8a}
+.rating-bronze{background:#1a0f0f;color:#ffb090;border:1px solid #7a3a2a}
+.insight-box{background:#0d1625;border-radius:9px;padding:13px 16px;margin-bottom:18px;text-align:left;border:1px solid #1a2a4a}
+.insight-title{font-size:10px;letter-spacing:2px;color:#f4a261;margin-bottom:8px}
+.insight-item{font-size:12px;color:#8a9ab8;margin-bottom:5px;display:flex;gap:7px;line-height:1.5}
+.win-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.btn-primary{background:#e63946;color:#fff;border:none;padding:11px 20px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer}
+.btn-primary:hover{background:#c0252f}
+.btn-secondary{background:transparent;color:#a0c0ff;border:1px solid #2a4a7a;padding:11px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
+.btn-secondary:hover{background:#1a3050}
+.share-box{background:#0d1625;border-radius:9px;padding:13px 16px;margin-bottom:16px;border:1px solid #1a2a4a}
+.share-text{font-size:12px;color:#667;margin-bottom:8px}
+.share-result{font-size:13px;color:#c0d0e8;font-family:monospace;background:#070e1a;padding:8px 10px;border-radius:6px;word-break:break-all;margin-bottom:8px;line-height:1.6}
+.copy-btn{background:#1a3a6a;color:#a0c0ff;border:1px solid #2a5a9a;padding:5px 14px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer}
+.copy-btn:hover{background:#2a4a8a}
+
+/* Leaderboard */
+.lb-panel{background:#16213e;border-radius:12px;border:1px solid #2a2a5a;overflow:hidden;margin-top:10px}
+.lb-head{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;background:#0d1020;border-bottom:1px solid #1a2a4a}
+.lb-title{font-size:15px;font-weight:700;color:#f4a261}
+.lb-cols{display:flex;padding:5px 14px;background:#080e18;font-size:9px;color:#445;gap:8px;letter-spacing:1px}
+.lb-empty{padding:28px;text-align:center;color:#445;font-size:13px}
+.lb-row{display:flex;align-items:center;padding:9px 14px;border-bottom:1px solid #111a2a;gap:8px;transition:background .15s}
+.lb-row:hover{background:#1a2a4a}
+.lb-row:last-child{border-bottom:none}
+.lb-rank{font-size:16px;min-width:26px;text-align:center}
+.lb-name{flex:1;font-size:13px;font-weight:600;color:#d8e4f8;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-badge{font-size:9px;padding:2px 7px;border-radius:8px;font-weight:700;white-space:nowrap}
+.bg-gold{background:#2a1a00;color:#f4a261}
+.bg-silver{background:#0f1a2a;color:#a0c0ff}
+.bg-bronze{background:#1a0f0f;color:#ff9070}
+.lb-time{font-size:12px;color:#f4a261;font-variant-numeric:tabular-nums;min-width:44px;text-align:right}
+.lb-eff{font-size:11px;font-weight:700;min-width:34px;text-align:right}
+.my-row{background:#0a1830 !important;border-left:2px solid #f4a261}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;z-index:100;padding:16px}
+.modal{background:#16213e;border:1px solid #2a3a6a;border-radius:14px;padding:28px 24px;width:100%;max-width:360px;text-align:center}
+.modal h2{font-size:19px;color:#fff;margin-bottom:6px}
+.modal p{font-size:13px;color:#8a9ab8;margin-bottom:16px;line-height:1.5}
+.modal input{width:100%;padding:10px 14px;border-radius:8px;border:1px solid #2a5a8a;background:#0d1a30;color:#fff;font-size:15px;margin-bottom:12px;outline:none}
+.modal input:focus{border-color:#f4a261}
+.modal-btn{background:#e63946;color:#fff;border:none;padding:11px 0;width:100%;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer}
+.modal-btn:hover{background:#c0252f}
+
+@media(max-width:480px){
+  .stats-grid{grid-template-columns:repeat(3,1fr)}
+  .stat-val{font-size:17px}
+  .welcome-title{font-size:21px}
+  .win-title{font-size:20px}
+  .choice-btn{font-size:13px;padding:10px 12px}
+}
 </style>
 </head>
 <body>
 <div id="app">
   <div class="header">
     <div class="logo">
-      <svg width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="18" fill="#e63946"/><text x="18" y="23" text-anchor="middle" font-size="13" font-weight="900" fill="#fff" font-family="Arial">CCM</text></svg>
-      <div><div class="logo-text">CCM<span style="color:#fff;font-size:14px;font-weight:400"> ›</span></div><span class="logo-sub">CONSULTANCY</span></div>
+      <svg width="34" height="34" viewBox="0 0 36 36"><circle cx="18" cy="18" r="18" fill="#e63946"/><text x="18" y="23" text-anchor="middle" font-size="13" font-weight="900" fill="#fff" font-family="Arial">CCM</text></svg>
+      <div><div class="logo-text">CCM<span style="color:#fff;font-size:13px;font-weight:400"> ›</span></div><span class="logo-sub">CONSULTANCY</span></div>
     </div>
-    <div style="display:flex;align-items:center;gap:14px">
-      <button class="btn-secondary" style="padding:7px 14px;font-size:12px" onclick="toggleLB()">🏆 Leaderboard</button>
-      <div class="timer-box"><div class="timer-label">ELAPSED TIME</div><div class="timer-val" id="timer">00:00</div></div>
+    <div class="header-right">
+      <button class="lb-btn" onclick="toggleLB()">🏆 Leaderboard</button>
+      <div class="timer-box">
+        <div class="timer-label">ELAPSED</div>
+        <div class="timer-val paused" id="timer">00:00</div>
+      </div>
     </div>
   </div>
 
-  <div class="progress-bar"><div class="progress-fill" id="progress" style="width:5%"></div></div>
-  <div class="meta-row">
-    <div class="mistakes" id="mistake-count">⚠ Mistakes: 0</div>
-    <div class="step-count" id="step-count">Step 1 of ~9</div>
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+    <div class="progress-label" id="progress-label">Ready to start</div>
   </div>
-  <div class="crumbs" id="crumbs"></div>
+
   <div id="scene-area"></div>
   <div id="lb-container" style="display:none"></div>
 </div>
 
-<!-- Name modal -->
 <div class="modal-overlay" id="name-modal" style="display:none">
   <div class="modal">
-    <div style="font-size:36px;margin-bottom:8px">🎯</div>
-    <h2>Deal Secured!</h2>
-    <p>Enter your name to save your score to the leaderboard.</p>
-    <input type="text" id="player-name" placeholder="Your name" maxlength="24" />
-    <button class="modal-btn" onclick="submitScore()">Save My Score</button>
+    <div style="font-size:38px;margin-bottom:10px">🏆</div>
+    <h2>Save your score</h2>
+    <p>Enter your name to appear on the leaderboard and share your result.</p>
+    <input type="text" id="player-name" placeholder="Your name" maxlength="28"/>
+    <button class="modal-btn" onclick="submitScore()">Save & View Leaderboard</button>
+    <button onclick="document.getElementById('name-modal').style.display='none'" style="background:none;border:none;color:#556;font-size:12px;margin-top:10px;cursor:pointer;width:100%">Skip</button>
   </div>
 </div>
 
 <script>
 const STEPS=[
-  {id:'intro',tag:'Background',title:'Let There Be Light – The GCC Sales Challenge',body:`<p>You are advising <strong>Layla Al-Rashidi</strong> — a Sales Executive at <strong>LumiTech Gulf LLC</strong>, based in Dubai. LumiTech's sole product is a plug-in fluorescent lamp that gives the warm glow of a traditional tungsten bulb.</p><p style="margin-top:10px">Layla covers commercial sales across the UAE, targeting interior designers, architects, hotel chains, and property developers.</p><p style="margin-top:10px"><strong>The opportunity:</strong> While researching leads, Layla spots an article in <em>Arabian Business</em>:</p><blockquote style="margin:12px 0;padding:12px;background:#0d1a2e;border-radius:6px;border-left:3px solid #f4a261;font-style:italic;color:#c9c9e0">"<strong>Al-Nakheel Developments</strong>, a construction group based in Abu Dhabi, has acquired three boutique hotel chains across the UAE. Their Contracts Director, <strong>Faisal Al-Mansoori</strong>, confirmed the group plans full refurbishments within 3 years."</blockquote><p style="margin-top:8px">Layla sees a first-class prospect — and has the buyer's name. <strong>What should she do first?</strong></p>`,choices:[{label:'A',text:'Do more research on Al-Nakheel Developments before reaching out.',next:'research_first',correct:true},{label:'B',text:'Telephone Faisal Al-Mansoori to get an appointment immediately.',next:'call_faisal',correct:false},{label:'C',text:'Make a cold call directly to Al-Nakheel\'s Abu Dhabi office.',next:'cold_call_faisal',correct:false}],progress:10},
-  {id:'research_first',tag:'✔ Good Decision',title:'Research: Al-Nakheel Developments',body:`<p>Smart move. Layla digs deeper and discovers Al-Nakheel is a holding company with subsidiaries including <strong>Al-Mansoori Interiors LLC</strong>, run by <strong>Mrs Rania Al-Mansoori</strong> — who specifies all lighting for Al-Nakheel hotel projects. Faisal is Contracts Director but doesn't choose the fittings.</p><p style="margin-top:10px"><strong>Who should Layla approach first?</strong></p>`,choices:[{label:'A',text:'Sparks MEP Contractors, then Mrs Rania Al-Mansoori.',next:'wrong_order',correct:false},{label:'B',text:'Mrs Rania Al-Mansoori first, then Sparks MEP Contractors.',next:'rania_first',correct:true},{label:'C',text:'Faisal Al-Mansoori only — he is the Contracts Director.',next:'faisal_only',correct:false},{label:'D',text:'Mrs Rania Al-Mansoori only.',next:'rania_only',correct:false}],progress:25},
-  {id:'rania_first',tag:'✔ Correct Strategy',title:'Getting an appointment with Mrs Rania Al-Mansoori',body:`<p>Layla calls Al-Mansoori Interiors. The receptionist asks: <span class="speaker">"May I tell her what the call is about?"</span></p><p style="margin-top:10px"><strong>How should Layla respond?</strong></p>`,choices:[{label:'A',text:'"It\'s about reducing electricity costs in the hotels."',next:'call_electricity',correct:false},{label:'B',text:'"It\'s a personal matter I must discuss with Mrs Al-Mansoori directly."',next:'call_personal',correct:false,penalty:true},{label:'C',text:'"It\'s about achieving tungsten lighting quality without the heat problems."',next:'call_heat',correct:true},{label:'D',text:'"I\'m sorry — could you put me through to Mrs Al-Mansoori\'s PA please?"',next:'call_pa',correct:false}],progress:38},
-  {id:'call_heat',tag:'✔ Great Hook',title:'Appointment secured!',body:`<p>The receptionist puts Layla through. Mrs Al-Mansoori is intrigued and books a meeting. Layla arrives at the Abu Dhabi office prepared with samples and cost figures.</p><p style="margin-top:10px">After pleasantries, Mrs Al-Mansoori opens:</p><div class="dialogue"><span class="speaker">Mrs Al-Mansoori:</span> "Well, Layla — where is this miracle light that lets a designer achieve the right scheme without the Finance Director breathing down her neck?"</div><p style="margin-top:10px">Layla takes out a stunning 3-lamp wall fitting. <strong>What should she say next?</strong></p>`,choices:[{label:'A',text:'Say nothing — let Mrs Al-Mansoori look at it first.',next:'silence_wins',correct:true},{label:'B',text:'"How do you like that?" — invite her immediate reaction.',next:'how_do_you_like',correct:false},{label:'C',text:'"A stunning fitting — and it cuts electricity costs by 75%."',next:'wrong_pitch',correct:false},{label:'D',text:'"Look at how the lamps and fitting complement one another."',next:'wrong_pitch',correct:false}],progress:50},
-  {id:'silence_wins',tag:'✔ Smart Selling',title:'The silent sell',body:`<p>Layla said nothing. Mrs Al-Mansoori examined the fitting from every angle, then studied 3 more samples.</p><div class="dialogue" style="margin-top:10px"><span class="speaker">Mrs Al-Mansoori:</span> "Yes, they're attractive. But what makes them <em>special</em> compared to other wall fittings?"</div><p style="margin-top:10px"><strong>How should Layla respond?</strong></p>`,choices:[{label:'A',text:'"These feature our unique LumiTech lamps — the latest development in lighting technology."',next:'feature_talk',correct:false},{label:'B',text:'"The lamps last 5,000 hours — you won\'t need to change them for years."',next:'lamp_life_wrong',correct:false},{label:'C',text:'"These lamps produce virtually no heat, so they won\'t damage décor — yet cost far less to run than tungsten."',next:'benefit_pitch',correct:true}],progress:62},
-  {id:'benefit_pitch',tag:'✔ Benefit-led Selling',title:'Handling the price objection',body:`<div class="dialogue"><span class="speaker">Mrs Al-Mansoori:</span> "There has to be a catch. I bet they're phenomenally expensive."</div><p style="margin-top:10px"><strong>What is the best response?</strong></p>`,choices:[{label:'A',text:'"At first the price does look high — but electricity savings more than cover the difference, and you eliminate the heat problem."',next:'price_objection_handle',correct:true},{label:'B',text:'"Yes, but you save more than the extra $9 in electricity costs."',next:'wrong_price',correct:false},{label:'C',text:'"What do you think they cost, Mrs Al-Mansoori?"',next:'price_question',correct:false},{label:'D',text:'"Let me show you just how affordable they really are." (pulls out calculator)',next:'numbers_too_early',correct:false}],progress:74},
-  {id:'price_objection_handle',tag:'✔ Objection Handled',title:'Time to close?',body:`<div class="dialogue"><span class="speaker">Mrs Al-Mansoori:</span> "I'd be happy to eliminate the heat problem — especially if it doesn't cost more. Our MEP engineers always complain about heat from our lighting schemes."</div><div class="dialogue" style="margin-top:8px"><span class="speaker">Layla:</span> "That fitting costs ~$20 more than its tungsten equivalent — but over 5,000 hours you'll save almost $40 in electricity and replacement costs."</div><div class="dialogue" style="margin-top:8px"><span class="speaker">Mrs Al-Mansoori:</span> "Our contractors review numbers. But I do want to solve the heat problem without extra cost."</div><p style="margin-top:10px">Clear buying signals. <strong>Is it time to close?</strong></p>`,choices:[{label:'A',text:'Yes — close now.',next:'close_now',correct:true},{label:'B',text:'No — not yet. Build more value first.',next:'hesitate',correct:false}],progress:85},
-  {id:'close_now',tag:'✔ Closing',title:'The close — and the next move',body:`<div class="dialogue"><span class="speaker">Layla:</span> "Would the brushed nickel or gold finish suit your designs better?"</div><div class="dialogue"><span class="speaker">Mrs Al-Mansoori:</span> "Gold, definitely."</div><div class="dialogue"><span class="speaker">Mrs Al-Mansoori:</span> "Orders go through Sparks MEP — but I'll recommend your fittings. Leave two catalogues; I'll pass one to them."</div><p style="margin-top:10px"><strong>Should Layla simply leave the catalogues and go?</strong></p>`,choices:[{label:'A',text:'Yes — Mrs Al-Mansoori has the relationship. Leave the catalogues.',next:'wrong_close',correct:false},{label:'B',text:'No — use the second catalogue as a reason to visit Sparks MEP personally.',next:'visit_sparks',correct:true}],progress:93},
-  {id:'visit_sparks',tag:'✔ Excellent Move',title:'Visiting Sparks MEP — the final step',body:`<p>Layla arranges to drop the catalogue at Sparks MEP in person and meets <strong>Tariq Saleh</strong>, their Contracts Manager.</p><div class="dialogue" style="margin-top:8px"><span class="speaker">Tariq:</span> "Mrs Al-Mansoori says you're bringing a designer's dream catalogue. Let me guess — looks great, but a nightmare for my teams?"</div><p style="margin-top:10px"><strong>What is Layla's best response?</strong></p>`,choices:[{label:'A',text:'"Actually, these reduce your maintenance burden — lamps last 5,000 hours, so corridor lights only need changing every 6 months instead of every 6 weeks."',next:'win',correct:true},{label:'B',text:'"Actually, they also cut electricity costs significantly."',next:'sparks_wrong',correct:false},{label:'C',text:'"They bring all the benefits of fluorescent to tungsten-style fittings."',next:'sparks_vague',correct:false}],progress:99}
+  {id:'intro',tag:'Your Scenario',title:'Meet Layla Al-Rashidi — Sales Executive, LumiTech Gulf LLC',
+  body:`<p>You are advising <strong>Layla Al-Rashidi</strong>, a Sales Executive at <strong>LumiTech Gulf LLC</strong> in Dubai. LumiTech makes a plug-in fluorescent lamp that gives the warm glow of tungsten — at a fraction of the running cost.</p>
+  <p>Layla covers commercial sales across the UAE: interior designers, architects, hotel chains, and property developers.</p>
+  <p><strong>The opportunity:</strong> While browsing leads, Layla spots this article in <em>Arabian Business</em>:</p>
+  <blockquote>"<strong>Al-Nakheel Developments</strong>, a construction group based in Abu Dhabi, has acquired three boutique hotel chains across the UAE. Their Contracts Director, <strong>Faisal Al-Mansoori</strong>, confirmed full refurbishments are planned within 3 years."</blockquote>
+  <p>Layla has a first-class prospect — and a name. <strong>What should she do first?</strong></p>`,
+  choices:[
+    {label:'A',text:'Do more research on Al-Nakheel Developments before reaching out.',next:'research_first',correct:true},
+    {label:'B',text:'Telephone Faisal Al-Mansoori to get an appointment immediately.',next:'call_faisal',correct:false},
+    {label:'C',text:'Make a cold call directly to Al-Nakheel\'s Abu Dhabi office.',next:'cold_call_faisal',correct:false}
+  ],progress:12,label:'Identifying the opportunity'},
+
+  {id:'research_first',tag:'✔ Good Thinking',title:'Researching Al-Nakheel Developments',
+  body:`<p>Layla digs deeper and discovers Al-Nakheel is a holding company. Its subsidiaries include:</p>
+  <ul style="margin:8px 0 10px;padding-left:18px;line-height:2.1;color:#b0bcd8;font-size:14px">
+    <li>Al-Nakheel Properties LLC</li>
+    <li>Al-Nakheel (Hotels) LLC</li>
+    <li>Sparks MEP Contractors LLC</li>
+    <li><strong style="color:#f4a261">Al-Mansoori Interiors LLC</strong> — directors: S. Al-Mansoori &amp; R. Al-Mansoori</li>
+  </ul>
+  <p>A quick call reveals <strong>Mrs Rania Al-Mansoori</strong> runs Al-Mansoori Interiors and specifies all lighting for Al-Nakheel hotel projects. Faisal is Contracts Director — but Rania chooses the fittings.</p>
+  <p style="margin-top:10px"><strong>Who should Layla approach first?</strong></p>`,
+  choices:[
+    {label:'A',text:'Sparks MEP Contractors first, then Mrs Rania Al-Mansoori.',next:'wrong_order',correct:false},
+    {label:'B',text:'Mrs Rania Al-Mansoori first, then Sparks MEP Contractors.',next:'rania_first',correct:true},
+    {label:'C',text:'Faisal Al-Mansoori only — he is the Contracts Director.',next:'faisal_only',correct:false},
+    {label:'D',text:'Mrs Rania Al-Mansoori only.',next:'rania_only',correct:false}
+  ],progress:25,label:'Mapping decision makers'},
+
+  {id:'rania_first',tag:'✔ Right Strategy',title:'Getting through to Mrs Rania Al-Mansoori',
+  body:`<p>Layla calls Al-Mansoori Interiors. The receptionist asks:</p>
+  <div class="dialogue"><span class="speaker">Receptionist</span>"May I tell Mrs Al-Mansoori what the call is about?"</div>
+  <p style="margin-top:10px"><strong>How should Layla respond?</strong></p>`,
+  choices:[
+    {label:'A',text:'"It\'s about reducing electricity costs in the hotels."',next:'call_electricity',correct:false},
+    {label:'B',text:'"It\'s a personal matter I must discuss with Mrs Al-Mansoori directly."',next:'call_personal',correct:false},
+    {label:'C',text:'"It\'s about achieving tungsten lighting quality without the heat problems."',next:'call_heat',correct:true},
+    {label:'D',text:'"I\'m sorry — could you put me through to Mrs Al-Mansoori\'s PA please?"',next:'call_pa',correct:false}
+  ],progress:38,label:'Opening the call'},
+
+  {id:'call_heat',tag:'✔ Strong Hook',title:'Appointment booked — now the meeting',
+  body:`<p>Layla is put through. Mrs Al-Mansoori is intrigued and schedules a meeting. Layla arrives at the Abu Dhabi office well-prepared with samples and cost figures.</p>
+  <p style="margin-top:8px">After introductions, Mrs Al-Mansoori opens:</p>
+  <div class="dialogue"><span class="speaker">Mrs Al-Mansoori</span>"Well, Layla — where is this miracle light that lets a designer achieve a proper scheme without the Finance Director breathing down her neck?"</div>
+  <p style="margin-top:10px">Layla takes out a beautiful 3-lamp wall fitting from her sample case and places it on the desk.</p>
+  <p><strong>What should she say next?</strong></p>`,
+  choices:[
+    {label:'A',text:'Say nothing — let Mrs Al-Mansoori look at it undisturbed.',next:'silence_wins',correct:true},
+    {label:'B',text:'"How do you like that?" — invite her immediate reaction.',next:'how_do_you_like',correct:false},
+    {label:'C',text:'"A stunning fitting — and it cuts electricity costs by 75%."',next:'wrong_pitch',correct:false},
+    {label:'D',text:'"Look at how the lamps and fitting complement one another."',next:'wrong_pitch2',correct:false}
+  ],progress:50,label:'The product demonstration'},
+
+  {id:'silence_wins',tag:'✔ Disciplined Selling',title:'Letting the product speak',
+  body:`<p>Layla stayed silent. Mrs Al-Mansoori examined the fitting carefully — from different angles, even asking Layla to hold it against the wall. Then she studied three more samples from the case.</p>
+  <div class="dialogue" style="margin-top:10px"><span class="speaker">Mrs Al-Mansoori</span>"Yes, they're very attractive. But what makes them <em>special</em> compared to other wall fittings?"</div>
+  <p style="margin-top:10px"><strong>How should Layla respond?</strong></p>`,
+  choices:[
+    {label:'A',text:'"These feature our unique LumiTech lamps — the latest development in lighting technology."',next:'feature_talk',correct:false},
+    {label:'B',text:'"The lamps last 5,000 hours — you won\'t need to change them for years."',next:'lamp_life_wrong',correct:false},
+    {label:'C',text:'"These lamps produce virtually no heat, so they won\'t damage décor — yet cost far less to run than tungsten."',next:'benefit_pitch',correct:true}
+  ],progress:62,label:'Presenting benefits'},
+
+  {id:'benefit_pitch',tag:'✔ Benefit-led',title:'Handling the price objection',
+  body:`<div class="dialogue"><span class="speaker">Mrs Al-Mansoori</span>"There has to be a catch, Ms Al-Rashidi. I imagine they're phenomenally expensive."</div>
+  <p style="margin-top:10px"><strong>What is the best response?</strong></p>`,
+  choices:[
+    {label:'A',text:'"At first glance the price looks higher — but the electricity savings more than cover the difference, and the heat problem disappears entirely."',next:'price_handle',correct:true},
+    {label:'B',text:'"Yes, but you save more than the extra $9 in electricity costs."',next:'wrong_price',correct:false},
+    {label:'C',text:'"What do you think they cost, Mrs Al-Mansoori?"',next:'price_question',correct:false},
+    {label:'D',text:'"Let me show you just how affordable they really are." (pulls out calculator)',next:'numbers_too_early',correct:false}
+  ],progress:74,label:'Handling objections'},
+
+  {id:'price_handle',tag:'✔ Objection Handled',title:'Reading the buying signal',
+  body:`<div class="dialogue"><span class="speaker">Mrs Al-Mansoori</span>"I'd be very happy to eliminate the heat problem — especially if it costs no more. Our MEP engineers are constantly complaining about heat from our lighting schemes."</div>
+  <div class="dialogue" style="margin-top:6px"><span class="speaker">Layla</span>"I understand that frustration entirely — and I'm glad our lamps solve it. That fitting costs around $20 more than its nearest tungsten equivalent — but over 5,000 hours you'll save almost $40 in electricity and replacement costs."</div>
+  <div class="dialogue" style="margin-top:6px"><span class="speaker">Mrs Al-Mansoori</span>"Our contractors review the numbers. But I do want to solve the heat problem without paying more for it."</div>
+  <p style="margin-top:10px">That's a clear buying signal. <strong>Is it time to close?</strong></p>`,
+  choices:[
+    {label:'A',text:'Yes — close now.',next:'close_now',correct:true},
+    {label:'B',text:'No — not yet. Continue building value.',next:'hesitate',correct:false}
+  ],progress:83,label:'Recognising buying signals'},
+
+  {id:'close_now',tag:'✔ Closing',title:'The close — and what comes next',
+  body:`<div class="dialogue"><span class="speaker">Layla</span>"Would the brushed nickel or the gold finish suit your design better?"</div>
+  <div class="dialogue" style="margin-top:6px"><span class="speaker">Mrs Al-Mansoori</span>"Gold, definitely — it fits the aesthetic we're going for."</div>
+  <div class="dialogue" style="margin-top:6px"><span class="speaker">Mrs Al-Mansoori</span>"Orders always go through Sparks MEP — but I will recommend your fittings. Could you leave two catalogues? I'll pass one on to them."</div>
+  <p style="margin-top:10px"><strong>Should Layla simply leave the catalogues and go?</strong></p>`,
+  choices:[
+    {label:'A',text:'Yes — Mrs Al-Mansoori has the relationship. Leave the catalogues and follow up later.',next:'wrong_close',correct:false},
+    {label:'B',text:'No — use the second catalogue as a reason to visit Sparks MEP personally.',next:'visit_sparks',correct:true}
+  ],progress:91,label:'Securing the next step'},
+
+  {id:'visit_sparks',tag:'✔ Excellent Move',title:'Meeting Tariq Saleh at Sparks MEP',
+  body:`<div class="dialogue"><span class="speaker">Layla</span>"Of course. To save you time, I'd be happy to deliver the second copy to Sparks MEP directly — and brief their team on the advantages. Who would be best to speak with?"</div>
+  <div class="dialogue" style="margin-top:6px"><span class="speaker">Mrs Al-Mansoori</span>"Ask for Tariq Saleh — their Contracts Manager. He handles all buying. I'll let him know you'll be in touch."</div>
+  <p style="margin-top:10px">Layla meets <strong>Tariq Saleh</strong> at Sparks MEP's Dubai office. He greets her with:</p>
+  <div class="dialogue"><span class="speaker">Tariq Saleh</span>"Mrs Al-Mansoori mentioned you. Let me guess — beautiful fittings that create headaches for my installation teams?"</div>
+  <p style="margin-top:10px"><strong>What is Layla's best response?</strong></p>`,
+  choices:[
+    {label:'A',text:'"Actually, these reduce your maintenance load — lamps last 5,000 hours, so corridor lights need changing every 6 months instead of every 6 weeks."',next:'win',correct:true},
+    {label:'B',text:'"Actually, they cut electricity costs significantly — your clients will see real savings."',next:'sparks_wrong',correct:false},
+    {label:'C',text:'"They bring all the benefits of fluorescent lighting to tungsten-style fittings."',next:'sparks_vague',correct:false}
+  ],progress:99,label:'Closing the contractor'}
 ];
 
 const OUTCOMES={
-  call_faisal:{type:'wrong',text:'Calling immediately without research means Layla targets the wrong contact. Faisal handles contracts but doesn\'t specify lighting.',redirect:'intro'},
-  cold_call_faisal:{type:'wrong',text:'A cold call without research is premature — Layla doesn\'t yet know who the real decision maker is.',redirect:'intro'},
-  wrong_order:{type:'wrong',text:'Sparks MEP will redirect Layla straight back to Mrs Al-Mansoori. Always start with the specifier, not the contractor.',redirect:'research_first'},
-  faisal_only:{type:'wrong',text:'Faisal controls contracts but doesn\'t specify lighting. He\'ll refer Layla to Sparks MEP without influencing the product choice.',redirect:'research_first'},
-  rania_only:{type:'info',text:'Close — but Layla should plan to see Mrs Al-Mansoori AND then Sparks MEP. The specifier recommends; the contractor places the order.',redirect:'rania_first'},
-  call_electricity:{type:'wrong',text:'Mrs Al-Mansoori is an interior designer. Electricity costs aren\'t her primary concern — design and aesthetics are. Wrong hook.',redirect:'rania_first'},
-  call_personal:{type:'wrong',text:'Claiming it\'s a "personal matter" is deceptive. Mrs Al-Mansoori would refuse to deal with Layla or LumiTech. Never use deceptive tactics.',redirect:'rania_first'},
-  call_pa:{type:'wrong',text:'Mrs Al-Mansoori has no PA — the receptionist says so. This wastes time and credibility.',redirect:'rania_first'},
-  how_do_you_like:{type:'wrong',text:'Mrs Al-Mansoori is engrossed examining the fitting. Asking questions while she\'s distracted gets no response. Stay silent.',redirect:'call_heat'},
-  wrong_pitch:{type:'wrong',text:'Mrs Al-Mansoori is too focused on the fitting to respond. Let the product sell itself first — say nothing.',redirect:'call_heat'},
-  feature_talk:{type:'wrong',text:'"Newest development" is a feature, not a benefit. She replies: "But what does it do for my designs?" Lead with benefits.',redirect:'silence_wins'},
-  lamp_life_wrong:{type:'wrong',text:'Mrs Al-Mansoori responds coldly: "As I don\'t change lamps, that doesn\'t thrill me." Wrong benefit for this buyer.',redirect:'silence_wins'},
-  wrong_price:{type:'wrong',text:'Mentioning "$9" invites her to ask the total price — which sounds high without context. Frame value before numbers.',redirect:'benefit_pitch'},
-  price_question:{type:'wrong',text:'"A phenomenal amount," she says. That doesn\'t move things forward. Lead with value before discussing price.',redirect:'benefit_pitch'},
-  numbers_too_early:{type:'wrong',text:'Pulling out calculations too early turns Mrs Al-Mansoori off — she says "leave the catalogue." Don\'t number-crunch with a designer.',redirect:'benefit_pitch'},
-  hesitate:{type:'wrong',text:'"He who hesitates is lost." Mrs Al-Mansoori gave clear buying signals. Waiting risks losing her attention.',redirect:'price_objection_handle'},
-  wrong_close:{type:'wrong',text:'Leaving without visiting Sparks MEP means losing control of the sale. The contractor could choose a competitor.',redirect:'close_now'},
-  sparks_wrong:{type:'wrong',text:'Tariq says: "Our Finance Director might care — but it doesn\'t excite me." Contractors care about maintenance, not electricity bills.',redirect:'visit_sparks'},
-  sparks_vague:{type:'wrong',text:'Too vague. Tariq asks: "What benefits exactly?" Layla loses momentum. Lead with the benefit most relevant to a contractor.',redirect:'visit_sparks'}
+  call_faisal:{text:'Calling without research means targeting the wrong contact. Faisal handles contracts but doesn\'t specify the fittings — Layla would quickly hit a dead end.',redirect:'intro'},
+  cold_call_faisal:{text:'A cold call without preparation is premature here. Layla doesn\'t yet know who the real decision maker is, or what their priorities are.',redirect:'intro'},
+  wrong_order:{text:'Sparks MEP will redirect Layla straight back to Mrs Al-Mansoori — the specifier always comes first. Contractors follow the designer\'s recommendation.',redirect:'research_first'},
+  faisal_only:{text:'Faisal is the Contracts Director, but he doesn\'t choose the fittings. He\'d refer Layla to Sparks MEP without influencing the product decision.',redirect:'research_first'},
+  rania_only:{type:'info',text:'This is close — but Layla should plan to see Mrs Al-Mansoori AND follow up with Sparks MEP. The specifier recommends; the contractor places the order. Both matter.',redirect:'rania_first'},
+  call_electricity:{text:'Mrs Al-Mansoori is an interior designer. Electricity costs aren\'t her world — design, aesthetics, and ambience are. This hook won\'t resonate with her.',redirect:'rania_first'},
+  call_personal:{text:'Implying a "personal matter" to get through is misleading. Mrs Al-Mansoori would feel deceived and refuse any further contact. Trust, once lost, is rarely recovered.',redirect:'rania_first'},
+  call_pa:{text:'Mrs Al-Mansoori doesn\'t have a PA — the receptionist confirms this. The call stalls and Layla loses momentum.',redirect:'rania_first'},
+  how_do_you_like:{text:'Mrs Al-Mansoori is absorbed in examining the fitting. Asking a question while she\'s distracted gets no response. The golden rule: stay silent while the buyer is engaged.',redirect:'call_heat'},
+  wrong_pitch:{text:'Mrs Al-Mansoori is still studying the fitting — she\'s not listening yet. Talking about electricity costs to a designer this early is also the wrong message.',redirect:'call_heat'},
+  wrong_pitch2:{text:'No response — Mrs Al-Mansoori is too focused on the fitting. The instinct to fill silence is natural, but resist it. Let the product do the work.',redirect:'call_heat'},
+  feature_talk:{text:'"Latest development" is a feature, not a benefit. Mrs Al-Mansoori replies: "Interesting — but what does it actually do for my designs?" Always lead with what it means for the buyer.',redirect:'silence_wins'},
+  lamp_life_wrong:{text:'Mrs Al-Mansoori responds coolly: "As I don\'t personally change lamps, that doesn\'t thrill me." Long lamp life is the right message — but for the contractor, not the designer.',redirect:'silence_wins'},
+  wrong_price:{text:'Mentioning "$9" triggers a question about the full price — which then sounds high without proper context. Always frame the value before you reach any numbers.',redirect:'benefit_pitch'},
+  price_question:{text:'"A phenomenal amount," she says. That doesn\'t move things forward. Lead with what the buyer gains before addressing what they pay.',redirect:'benefit_pitch'},
+  numbers_too_early:{text:'Calculations too soon switch Mrs Al-Mansoori into a sceptical mindset — she ends the conversation with "leave the catalogue." Designers think in outcomes, not spreadsheets.',redirect:'benefit_pitch'},
+  hesitate:{text:'Mrs Al-Mansoori has given a clear buying signal. Continuing to build value at this point risks talking past the close. When the signal is there — act on it.',redirect:'price_handle'},
+  wrong_close:{text:'Leaving without visiting Sparks MEP means losing control of the sale. The contractor could easily choose a competing product. Always follow the order to its source.',redirect:'close_now'},
+  sparks_wrong:{text:'Tariq replies: "Our Finance Director might appreciate that — but it doesn\'t excite me." MEP contractors care about time on site and maintenance schedules, not energy bills.',redirect:'visit_sparks'},
+  sparks_vague:{text:'Too general. Tariq asks: "What benefits exactly?" Layla has lost her momentum. Lead with the specific benefit that matters most to a contractor: reduced call-outs.',redirect:'visit_sparks'}
 };
 
-let current='intro',startTime=Date.now(),timerInterval,mistakes=0,steps=0,history=[],finished=false,lbVisible=false,pendingScore=null;
+let startTime=null,timerInterval=null,mistakes=0,finished=false,lbVisible=false,pendingScore=null,timerStarted=false;
 
 function fmt(ms){const s=Math.floor(ms/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
-function score(ms,m){return Math.max(0,10000-Math.floor(ms/1000)*10-m*200)}
+function calcScore(ms,m){return Math.max(0,10000-Math.floor(ms/1000)*8-m*250)}
+function effColor(e){return e>=90?'#7dffb0':e>=70?'#f4a261':'#ff9070'}
 
-function startTimer(){timerInterval=setInterval(()=>{if(!finished)document.getElementById('timer').textContent=fmt(Date.now()-startTime);},500)}
+function startTimer(){
+  if(timerStarted)return;
+  timerStarted=true;
+  startTime=Date.now();
+  document.getElementById('timer').classList.remove('paused');
+  timerInterval=setInterval(()=>{
+    if(!finished)document.getElementById('timer').textContent=fmt(Date.now()-startTime);
+  },500);
+}
 
-function renderCrumbs(){
-  document.getElementById('crumbs').innerHTML=history.map((h,i)=>`<span class="crumb-dot ${h}" title="Step ${i+1}"></span>`).join('');
+function showWelcome(){
+  document.getElementById('progress').style.width='0%';
+  document.getElementById('progress-label').textContent='Ready to start';
+  document.getElementById('scene-area').innerHTML=`
+    <div class="welcome">
+      <div class="welcome-icon">💡</div>
+      <div class="welcome-title">The Sales Maze</div>
+      <div class="welcome-sub">A GCC Sales Challenge — can you close the deal?</div>
+      <div class="badge-row">
+        <span class="badge badge-red">🕐 Timed</span>
+        <span class="badge badge-blue">🧠 9 Decisions</span>
+        <span class="badge badge-green">🏆 Leaderboard</span>
+      </div>
+      <div class="learn-box">
+        <div class="learn-title">WHAT YOU'LL PRACTISE</div>
+        <div class="learn-item"><span class="learn-dot">›</span>Identifying the real decision maker before you call</div>
+        <div class="learn-item"><span class="learn-dot">›</span>Opening a call with a benefit that resonates</div>
+        <div class="learn-item"><span class="learn-dot">›</span>Reading and responding to buying signals</div>
+        <div class="learn-item"><span class="learn-dot">›</span>Handling price objections without discounting</div>
+        <div class="learn-item"><span class="learn-dot">›</span>Closing confidently at the right moment</div>
+      </div>
+      <div class="welcome-desc">Navigate a real UAE sales scenario as Layla Al-Rashidi. Every decision matters — the timer starts with your first choice. Make it count.</div>
+      <button class="start-btn" onclick="startGame()">Start the Maze →</button>
+    </div>`;
+}
+
+function startGame(){
+  renderScene('intro');
 }
 
 function renderScene(id){
   const scene=STEPS.find(s=>s.id===id);
   if(!scene)return;
-  steps++;
-  document.getElementById('step-count').textContent=`Step ${steps} of ~9`;
-  document.getElementById('progress').style.width=scene.progress+'%';
   document.getElementById('lb-container').style.display='none';
   lbVisible=false;
+  document.getElementById('progress').style.width=scene.progress+'%';
+  document.getElementById('progress-label').textContent=scene.label||'';
   document.getElementById('scene-area').innerHTML=`
     <div class="scene-card">
       <div class="scene-tag">${scene.tag}</div>
@@ -187,64 +363,93 @@ function renderScene(id){
       <div class="scene-body">${scene.body}</div>
     </div>
     <div class="choices" id="choices">
-      ${scene.choices.map(c=>`<button class="choice-btn" onclick="choose('${c.next}',${c.correct},'${id}')">
-        <span class="choice-label">${c.label}</span><span>${c.text}</span></button>`).join('')}
+      ${scene.choices.map(c=>`
+        <button class="choice-btn" onclick="choose('${c.next}',${c.correct},'${id}')">
+          <span class="choice-label">${c.label}</span>
+          <span>${c.text}</span>
+        </button>`).join('')}
     </div>`;
 }
 
 function choose(next,correct,fromId){
+  startTimer();
   if(correct){
-    history.push('correct');renderCrumbs();
-    if(next==='win')showWin();else renderScene(next);
+    if(next==='win')showWin();
+    else renderScene(next);
   } else {
-    mistakes++;history.push('wrong');renderCrumbs();
-    document.getElementById('mistake-count').textContent=`⚠ Mistakes: ${mistakes}`;
+    mistakes++;
     const o=OUTCOMES[next];
+    const isInfo=o&&o.type==='info';
     const banner=document.createElement('div');
-    banner.className=`feedback-banner ${o&&o.type==='info'?'info':'wrong'}`;
-    banner.innerHTML=`<strong>${o&&o.type==='info'?'ℹ Note':'✗ Not quite'}:</strong> ${o?o.text:'That path leads to a dead end.'}<br><br>
-      <button onclick="renderScene('${o?o.redirect:fromId}')" style="background:#e63946;color:#fff;border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:700;margin-top:4px">↩ Try again</button>`;
+    banner.className=`feedback-banner ${isInfo?'info':'wrong'}`;
+    banner.innerHTML=`<strong>${isInfo?'ℹ️ Worth noting:':'💡 Learning moment:'}</strong> ${o?o.text:'This path leads to a dead end — try a different approach.'}<br>
+      <button class="retry-btn" onclick="renderScene('${o?o.redirect:fromId}')">↩ Try again</button>`;
     const card=document.getElementById('scene-area').querySelector('.scene-card');
     card.after(banner);
-    document.getElementById('choices').style.cssText='opacity:.3;pointer-events:none';
+    const ch=document.getElementById('choices');
+    ch.style.opacity='.25';ch.style.pointerEvents='none';
     banner.scrollIntoView({behavior:'smooth',block:'center'});
   }
 }
 
 function showWin(){
-  finished=true;clearInterval(timerInterval);
-  const elapsed=Date.now()-startTime;
+  finished=true;
+  clearInterval(timerInterval);
+  const elapsed=startTime?Date.now()-startTime:0;
   const secs=Math.floor(elapsed/1000);
   const eff=Math.max(0,100-mistakes*12);
-  const sc=score(elapsed,mistakes);
+  const sc=calcScore(elapsed,mistakes);
   let rating,rc;
   if(mistakes===0&&secs<180){rating='🏆 Gold – Elite Closer';rc='rating-gold';}
   else if(mistakes<=2){rating='🥈 Silver – Sharp Salesperson';rc='rating-silver';}
-  else{rating='🥉 Bronze – Keep Practising';rc='rating-bronze';}
-  pendingScore={time:elapsed,mistakes,efficiency:eff,score:sc,rating,fmt:fmt(elapsed)};
+  else{rating='🥉 Bronze – Building Momentum';rc='rating-bronze';}
+  pendingScore={time:elapsed,fmt:fmt(elapsed),mistakes,efficiency:eff,score:sc,rating};
+  const shareText=`I completed the CCM Sales Maze in ${fmt(elapsed)} with ${mistakes} learning moment${mistakes!==1?'s':''} — ${rating.split('–')[1].trim()}. Can you beat it?`;
+  document.getElementById('progress').style.width='100%';
+  document.getElementById('progress-label').textContent='Complete!';
   document.getElementById('scene-area').innerHTML=`
     <div class="win-screen">
       <div class="win-icon">🎯</div>
       <div class="win-title">Deal Secured!</div>
-      <div class="win-sub">Layla landed the Al-Nakheel Hotels contract — LumiTech Gulf wins the project!</div>
+      <div class="win-sub">Layla landed the Al-Nakheel Hotels contract.<br>LumiTech Gulf wins the project.</div>
       <div class="stats-grid">
-        <div class="stat-card"><div class="stat-val">${fmt(elapsed)}</div><div class="stat-label">Time Taken</div></div>
-        <div class="stat-card"><div class="stat-val">${mistakes}</div><div class="stat-label">Wrong Turns</div></div>
-        <div class="stat-card"><div class="stat-val">${eff}%</div><div class="stat-label">Efficiency</div></div>
+        <div class="stat-card"><div class="stat-val">${fmt(elapsed)}</div><div class="stat-label">Time to close</div></div>
+        <div class="stat-card"><div class="stat-val" style="color:${effColor(eff)}">${eff}%</div><div class="stat-label">Decision accuracy</div></div>
+        <div class="stat-card"><div class="stat-val">${mistakes}</div><div class="stat-label">Learning moments</div></div>
       </div>
       <div class="rating-badge ${rc}">${rating}</div>
-      <p style="font-size:13px;color:#888;margin-bottom:20px">Research first · match benefits to the buyer · close on signals · follow up with the order placer.</p>
+      <div class="insight-box">
+        <div class="insight-title">KEY PRINCIPLES IN THIS SCENARIO</div>
+        <div class="insight-item"><span style="color:#f4a261">›</span>Research before you reach out — know who really decides</div>
+        <div class="insight-item"><span style="color:#f4a261">›</span>Match your opening benefit to what that buyer cares about</div>
+        <div class="insight-item"><span style="color:#f4a261">›</span>Silence during product demonstration is a powerful tool</div>
+        <div class="insight-item"><span style="color:#f4a261">›</span>Close when you see the signal — not a moment later</div>
+        <div class="insight-item"><span style="color:#f4a261">›</span>Always follow the order to the person who places it</div>
+      </div>
+      <div class="share-box">
+        <div class="share-text">Share your result:</div>
+        <div class="share-result" id="share-txt">${shareText}</div>
+        <button class="copy-btn" onclick="copyResult()">📋 Copy result</button>
+      </div>
       <div class="win-btns">
         <button class="btn-primary" onclick="openNameModal()">🏆 Save to Leaderboard</button>
-        <button class="btn-secondary" onclick="restart()">▶ Play Again</button>
+        <button class="btn-secondary" onclick="fullRestart()">▶ Play Again</button>
       </div>
     </div>`;
-  document.getElementById('progress').style.width='100%';
+}
+
+function copyResult(){
+  const t=document.getElementById('share-txt').textContent;
+  navigator.clipboard.writeText(t).then(()=>{
+    const b=document.querySelector('.copy-btn');
+    b.textContent='✅ Copied!';
+    setTimeout(()=>b.textContent='📋 Copy result',2000);
+  });
 }
 
 function openNameModal(){
   document.getElementById('name-modal').style.display='flex';
-  setTimeout(()=>document.getElementById('player-name').focus(),100);
+  setTimeout(()=>document.getElementById('player-name').focus(),80);
 }
 
 async function submitScore(){
@@ -252,20 +457,20 @@ async function submitScore(){
   if(!name)return;
   document.getElementById('name-modal').style.display='none';
   if(!pendingScore)return;
-  const entry={name,time:pendingScore.time,fmt:pendingScore.fmt,mistakes:pendingScore.mistakes,efficiency:pendingScore.efficiency,score:pendingScore.score,rating:pendingScore.rating,ts:Date.now()};
-  try{await window.storage.set('lb:'+entry.ts,JSON.stringify(entry),true);}catch(e){console.log('Storage error',e);}
+  const entry={name,...pendingScore,ts:Date.now()};
+  try{await window.storage.set('lb2:'+entry.ts,JSON.stringify(entry),true);}catch(e){}
   pendingScore=null;
-  showLeaderboard(name);
+  showLeaderboard(name,entry.ts);
 }
 
 async function loadScores(){
   try{
-    const res=await window.storage.list('lb:',true);
+    const res=await window.storage.list('lb2:',true);
     if(!res||!res.keys||!res.keys.length)return[];
     const entries=await Promise.all(res.keys.map(async k=>{
       try{const r=await window.storage.get(k,true);return r?JSON.parse(r.value):null;}catch{return null;}
     }));
-    return entries.filter(Boolean).sort((a,b)=>b.score-a.score).slice(0,20);
+    return entries.filter(Boolean).sort((a,b)=>b.score-a.score).slice(0,25);
   }catch{return[];}
 }
 
@@ -275,63 +480,51 @@ async function toggleLB(){
   else document.getElementById('lb-container').style.display='none';
 }
 
-async function showLeaderboard(highlight){
+async function showLeaderboard(highlight,highlightTs){
   const scores=await loadScores();
   const medals=['🥇','🥈','🥉'];
-  const container=document.getElementById('lb-container');
-  container.style.display='block';
-  lbVisible=true;
-
+  const c=document.getElementById('lb-container');
+  c.style.display='block';lbVisible=true;
   if(!scores.length){
-    container.innerHTML=`<div class="lb-panel"><div class="lb-header"><div class="lb-title">🏆 Leaderboard</div></div><div class="lb-empty">No scores yet — be the first to complete the maze!</div></div>`;
-    return;
+    c.innerHTML=`<div class="lb-panel"><div class="lb-head"><div class="lb-title">🏆 Leaderboard</div></div><div class="lb-empty">No scores yet — be the first to complete the maze!</div></div>`;
+    c.scrollIntoView({behavior:'smooth',block:'nearest'});return;
   }
-
   const rows=scores.map((s,i)=>{
-    const isMe=highlight&&s.name===highlight&&i===scores.findIndex(x=>x.name===highlight&&x.ts===s.ts);
-    const rankIcon=i<3?medals[i]:`<span style="font-size:13px;color:#555">${i+1}</span>`;
-    const ratingShort=s.rating.includes('Gold')?'Gold':s.rating.includes('Silver')?'Silver':'Bronze';
-    const bc=ratingShort==='Gold'?'badge-gold':ratingShort==='Silver'?'badge-silver':'badge-bronze';
-    const effColor=s.efficiency>=90?'#7dffb0':s.efficiency>=70?'#f4a261':'#ff8888';
+    const isMe=highlight&&s.name===highlight&&s.ts===highlightTs;
+    const rank=i<3?medals[i]:`<span style="font-size:12px;color:#445">${i+1}</span>`;
+    const rs=s.rating.includes('Gold')?'Gold':s.rating.includes('Silver')?'Silver':'Bronze';
+    const bc=rs==='Gold'?'bg-gold':rs==='Silver'?'bg-silver':'bg-bronze';
     return `<div class="lb-row${isMe?' my-row':''}">
-      <div class="lb-rank">${rankIcon}</div>
-      <div class="lb-name">${s.name}${isMe?' <span style="font-size:10px;color:#f4a261">◀ you</span>':''}</div>
-      <div class="lb-badges"><span class="lb-badge ${bc}">${ratingShort}</span></div>
+      <div class="lb-rank">${rank}</div>
+      <div class="lb-name">${s.name}${isMe?' <span style="font-size:9px;color:#f4a261;margin-left:4px">◀ you</span>':''}</div>
+      <span class="lb-badge ${bc}">${rs}</span>
       <div class="lb-time">${s.fmt}</div>
-      <div class="lb-mistakes" style="color:#888">${s.mistakes} mistake${s.mistakes!==1?'s':''}</div>
-      <div class="lb-eff" style="color:${effColor}">${s.efficiency}%</div>
+      <div class="lb-eff" style="color:${effColor(s.efficiency)}">${s.efficiency}%</div>
     </div>`;
   }).join('');
-
-  container.innerHTML=`<div class="lb-panel">
-    <div class="lb-header">
-      <div class="lb-title">🏆 Global Leaderboard</div>
-      <span style="font-size:11px;color:#555">${scores.length} player${scores.length!==1?'s':''}</span>
+  c.innerHTML=`<div class="lb-panel">
+    <div class="lb-head">
+      <div class="lb-title">🏆 Leaderboard</div>
+      <span style="font-size:11px;color:#445">${scores.length} player${scores.length!==1?'s':''}</span>
     </div>
-    <div style="display:flex;padding:6px 16px;background:#0d1020;font-size:10px;color:#555;gap:12px">
-      <span style="min-width:28px">Rank</span><span style="flex:1">Name</span><span style="min-width:50px">Rating</span>
-      <span style="min-width:48px;text-align:right">Time</span>
-      <span style="min-width:60px;text-align:right">Mistakes</span>
-      <span style="min-width:38px;text-align:right">Eff.</span>
+    <div class="lb-cols" style="display:flex;justify-content:space-between">
+      <span>PLAYER</span><span style="margin-left:auto;margin-right:8px">TIME</span><span>EFF.</span>
     </div>
     ${rows}
   </div>`;
-  container.scrollIntoView({behavior:'smooth',block:'nearest'});
+  c.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
-function restart(){
-  current='intro';mistakes=0;steps=0;history=[];finished=false;pendingScore=null;
-  startTime=Date.now();
-  document.getElementById('mistake-count').textContent='⚠ Mistakes: 0';
+function fullRestart(){
+  finished=false;timerStarted=false;mistakes=0;pendingScore=null;lbVisible=false;
+  clearInterval(timerInterval);
   document.getElementById('timer').textContent='00:00';
-  document.getElementById('crumbs').innerHTML='';
+  document.getElementById('timer').classList.add('paused');
   document.getElementById('lb-container').style.display='none';
-  lbVisible=false;
-  renderScene('intro');
+  showWelcome();
 }
 
-startTimer();
-renderScene('intro');
+showWelcome();
 </script>
 </body>
 </html>
