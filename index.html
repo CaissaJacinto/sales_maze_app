@@ -377,13 +377,15 @@ function renderScene(id){
       <div class="scene-title">${scene.title}</div>
       <div class="scene-body">${scene.body}</div>
     </div>
-    <div class="choices" id="choices">
-      ${scene.choices.map(c=>`
-        <button class="choice-btn" onclick="choose('${c.next}',${c.correct},'${id}','${c.label}',\`${c.text.replace(/`/g,"'")}\`)">
-          <span class="choice-label">${c.label}</span>
-          <span>${c.text}</span>
-        </button>`).join('')}
-    </div>`;
+    <div class="choices" id="choices"></div>`;
+  const choicesEl=document.getElementById('choices');
+  scene.choices.forEach(c=>{
+    const btn=document.createElement('button');
+    btn.className='choice-btn';
+    btn.innerHTML=`<span class="choice-label">${c.label}</span><span>${c.text}</span>`;
+    btn.addEventListener('click',()=>choose(c.next,c.correct,id,c.label,c.text));
+    choicesEl.appendChild(btn);
+  });
 }
 
 async function choose(next,correct,fromId,choiceLabel,choiceText){
