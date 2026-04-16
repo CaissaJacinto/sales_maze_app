@@ -173,6 +173,53 @@ blockquote{margin:10px 0;padding:12px 14px;background:#0d1a2e;border-radius:8px;
 </div>
 
 <script>
+const SUPA_URL='https://dkpggyccoidmmysqfqmr.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRrcGdneWNjb2lkbW15c3FmcW1yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxODg5MDcsImV4cCI6MjA5MDc2NDkwN30.Jk5hjn64xE128UfrTFtLgJxzdc9uc1wc_uQlmVb22M8';
+const SESSION_ID='sess_'+Math.random().toString(36).slice(2,10)+'_'+Date.now();
+let playerNameGlobal='Anonymous';
+let attemptCounter={};
+
+async function sbInsert(table,row){
+  try{
+    await fetch(`${SUPA_URL}/rest/v1/${table}`,{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'apikey':SUPA_KEY,
+        'Authorization':'Bearer '+SUPA_KEY,
+        'Prefer':'return=minimal'
+      },
+      body:JSON.stringify(row)
+    });
+  }catch(e){console.log('Supabase error',e);}
+}
+
+async function logResponse(questionId,questionLabel,choiceMade,wasCorrect){
+  attemptCounter[questionId]=(attemptCounter[questionId]||0)+1;
+  await sbInsert('responses',{
+    player_name:playerNameGlobal,
+    question_id:questionId,
+    question_label:questionLabel,
+    choice_made:choiceMade,
+    was_correct:wasCorrect,
+    attempt_number:attemptCounter[questionId],
+    session_id:SESSION_ID
+  });
+}
+
+async function logScore(name,scoreData){
+  await sbInsert('scores',{
+    player_name:name,
+    session_id:SESSION_ID,
+    time_ms:scoreData.time,
+    time_fmt:scoreData.fmt,
+    mistakes:scoreData.mistakes,
+    efficiency:scoreData.efficiency,
+    score:scoreData.score,
+    rating:scoreData.rating
+  });
+}
+
 const STEPS=[
   {id:'intro',tag:'Your Scenario',title:'Meet Layla Al-Rashidi — Sales Executive, LumiTech Gulf LLC',
   body:`<p>You are advising <strong>Layla Al-Rashidi</strong>, a Sales Executive at <strong>LumiTech Gulf LLC</strong> in Dubai. LumiTech makes a plug-in fluorescent lamp that gives the warm glow of tungsten — at a fraction of the running cost.</p>
@@ -371,8 +418,12 @@ function renderScene(id){
     </div>`;
 }
 
-function choose(next,correct,fromId){
+async function choose(next,correct,fromId){
   startTimer();
+  const scene=STEPS.find(s=>s.id===fromId);
+  const choiceObj=scene?scene.choices.find(c=>c.next===next):null;
+  const choiceText=choiceObj?choiceObj.text.slice(0,80):'unknown';
+  await logResponse(fromId,scene?scene.label:'unknown',choiceText,correct);
   if(correct){
     if(next==='win')showWin();
     else renderScene(next);
@@ -455,8 +506,10 @@ function openNameModal(){
 async function submitScore(){
   const name=document.getElementById('player-name').value.trim();
   if(!name)return;
+  playerNameGlobal=name;
   document.getElementById('name-modal').style.display='none';
   if(!pendingScore)return;
+  await logScore(name,pendingScore);
   const entry={name,...pendingScore,ts:Date.now()};
   try{await window.storage.set('lb2:'+entry.ts,JSON.stringify(entry),true);}catch(e){}
   pendingScore=null;
