@@ -127,8 +127,7 @@ blockquote{margin:10px 0;padding:12px 14px;background:#0d1a2e;border-radius:8px;
 <div id="app">
   <div class="header">
     <div class="logo">
-      <svg width="34" height="34" viewBox="0 0 36 36"><circle cx="18" cy="18" r="18" fill="#e63946"/><text x="18" y="23" text-anchor="middle" font-size="13" font-weight="900" fill="#fff" font-family="Arial">CCM</text></svg>
-      <div><div class="logo-text">CCM<span style="color:#fff;font-size:13px;font-weight:400"> ›</span></div><span class="logo-sub">CONSULTANCY</span></div>
+      <img src="https://www.ccmconsultancy.com/wp-content/uploads/2019/09/cropped-CCM-Square-8-150.png" alt="CCM Consultancy" style="height:38px;width:auto;border-radius:6px">
     </div>
     <div class="header-right">
       <button class="lb-btn" onclick="toggleLB()">🏆 Leaderboard</button>
@@ -216,19 +215,20 @@ const STEPS=[
   body:`<p>You are advising <strong>Layla Al-Rashidi</strong>, a Sales Executive at <strong>LumiTech Gulf LLC</strong> in Dubai. LumiTech makes a plug-in fluorescent lamp that gives the warm glow of tungsten — at a fraction of the running cost.</p>
   <p>Layla covers commercial sales across the UAE: interior designers, architects, hotel chains, and property developers.</p>
   <p><strong>The opportunity:</strong> While browsing leads, Layla spots this article in <em>Arabian Business</em>:</p>
-  <blockquote>"<strong>Al-Nakheel Developments</strong>, a construction group based in Abu Dhabi, has acquired three boutique hotel chains across the UAE. Their Contracts Director, <strong>Faisal Al-Mansoori</strong>, confirmed full refurbishments are planned within 3 years."</blockquote>
+  <blockquote>"<strong>Dar Al-Wahat Developments</strong>, a construction group based in Abu Dhabi, has acquired three boutique hotel chains across the UAE. Their Contracts Director, <strong>Faisal Al-Mansoori</strong>, confirmed full refurbishments are planned within 3 years."</blockquote>
   <p>Layla has a first-class prospect — and a name. <strong>What should she do first?</strong></p>`,
   choices:[
     {label:'A',text:'Do more research on Al-Nakheel Developments before reaching out.',next:'research_first',correct:true},
     {label:'B',text:'Telephone Faisal Al-Mansoori to get an appointment immediately.',next:'call_faisal',correct:false},
     {label:'C',text:'Make a cold call directly to Al-Nakheel\'s Abu Dhabi office.',next:'cold_call_faisal',correct:false}
   ],progress:12,label:'Identifying the opportunity'},
-  {id:'research_first',tag:'✔ Good Thinking',title:'Researching Al-Nakheel Developments',
-  body:`<p>Layla digs deeper and discovers Al-Nakheel is a holding company. Its subsidiaries include <strong style="color:#f4a261">Al-Mansoori Interiors LLC</strong>, run by <strong>Mrs Rania Al-Mansoori</strong> — who specifies all lighting for Al-Nakheel hotel projects. Faisal is Contracts Director but doesn't choose the fittings.</p>
+  {id:'research_first',tag:'✔ Good Thinking',title:'Researching Dar Al-Wahat Developments',
+  body:`<p>Layla digs deeper and discovers Dar Al-Wahat is a holding company. Its subsidiaries include <strong style="color:#f4a261">Al-Mansoori Interiors LLC</strong>, run by <strong>Mrs Rania Al-Mansoori</strong> — who specifies all lighting for the hotel projects. Faisal is Contracts Director but doesn't choose the fittings.</p>
+  <p>She also finds that all electrical contracting work is handled by a subsidiary called <strong>Bright Star MEP Contractors LLC</strong>, based in Dubai, who buy and install all electrical fittings across the group's projects.</p>
   <p style="margin-top:10px"><strong>Who should Layla approach first?</strong></p>`,
   choices:[
-    {label:'A',text:'Sparks MEP Contractors first, then Mrs Rania Al-Mansoori.',next:'wrong_order',correct:false},
-    {label:'B',text:'Mrs Rania Al-Mansoori first, then Sparks MEP Contractors.',next:'rania_first',correct:true},
+    {label:'A',text:'Bright Star MEP Contractors first, then Mrs Rania Al-Mansoori.',next:'wrong_order',correct:false},
+    {label:'B',text:'Mrs Rania Al-Mansoori first, then Bright Star MEP Contractors.',next:'rania_first',correct:true},
     {label:'C',text:'Faisal Al-Mansoori only — he is the Contracts Director.',next:'faisal_only',correct:false},
     {label:'D',text:'Mrs Rania Al-Mansoori only.',next:'rania_only',correct:false}
   ],progress:25,label:'Mapping decision makers'},
@@ -283,7 +283,7 @@ const STEPS=[
   {id:'close_now',tag:'✔ Closing',title:'The close — and what comes next',
   body:`<div class="dialogue"><span class="speaker">Layla</span>"Would the brushed nickel or the gold finish suit your design better?"</div>
   <div class="dialogue" style="margin-top:6px"><span class="speaker">Mrs Al-Mansoori</span>"Gold, definitely."</div>
-  <div class="dialogue" style="margin-top:6px"><span class="speaker">Mrs Al-Mansoori</span>"Orders go through Sparks MEP — but I'll recommend your fittings. Leave two catalogues; I'll pass one to them."</div>
+  <div class="dialogue" style="margin-top:6px"><span class="speaker">Mrs Al-Mansoori</span>"Orders go through Bright Star MEP — but I'll recommend your fittings. Leave two catalogues; I'll pass one to them."</div>
   <p style="margin-top:10px"><strong>Should Layla simply leave the catalogues and go?</strong></p>`,
   choices:[
     {label:'A',text:'Yes — Mrs Al-Mansoori has the relationship. Leave the catalogues and follow up later.',next:'wrong_close',correct:false},
@@ -305,9 +305,9 @@ const STEPS=[
 const OUTCOMES={
   call_faisal:{text:'Calling without research means targeting the wrong contact. Faisal handles contracts but doesn\'t specify the fittings.',redirect:'intro'},
   cold_call_faisal:{text:'A cold call without preparation is premature. Layla doesn\'t yet know who the real decision maker is.',redirect:'intro'},
-  wrong_order:{text:'Sparks MEP will redirect Layla straight back to Mrs Al-Mansoori. The specifier always comes first.',redirect:'research_first'},
+  wrong_order:{text:'Bright Star MEP will redirect Layla straight back to Mrs Al-Mansoori. The specifier always comes first.',redirect:'research_first'},
   faisal_only:{text:'Faisal is Contracts Director but doesn\'t choose the fittings. He\'d refer Layla without influencing the product decision.',redirect:'research_first'},
-  rania_only:{type:'info',text:'Close — but Layla should plan to see Mrs Al-Mansoori AND follow up with Sparks MEP. The specifier recommends; the contractor places the order.',redirect:'rania_first'},
+  rania_only:{type:'info',text:'Close — but Layla should plan to see Mrs Al-Mansoori AND follow up with Bright Star MEP. The specifier recommends; the contractor places the order.',redirect:'rania_first'},
   call_electricity:{text:'Mrs Al-Mansoori is an interior designer. Electricity costs aren\'t her world — design and aesthetics are. Wrong hook.',redirect:'rania_first'},
   call_personal:{text:'Implying a "personal matter" is misleading. Mrs Al-Mansoori would feel deceived and refuse further contact.',redirect:'rania_first'},
   call_pa:{text:'Mrs Al-Mansoori doesn\'t have a PA — the receptionist confirms this. The call stalls.',redirect:'rania_first'},
@@ -320,7 +320,7 @@ const OUTCOMES={
   price_question:{text:'"A phenomenal amount," she says. Lead with what the buyer gains before addressing what they pay.',redirect:'benefit_pitch'},
   numbers_too_early:{text:'Calculations too soon switch Mrs Al-Mansoori into a sceptical mindset. Designers think in outcomes, not spreadsheets.',redirect:'benefit_pitch'},
   hesitate:{text:'Mrs Al-Mansoori has given a clear buying signal. When the signal is there — act on it.',redirect:'price_handle'},
-  wrong_close:{text:'Leaving without visiting Sparks MEP means losing control of the sale. The contractor could choose a competitor.',redirect:'close_now'},
+  wrong_close:{text:'Leaving without visiting Bright Star MEP means losing control of the sale. The contractor could choose a competitor.',redirect:'close_now'},
   sparks_wrong:{text:'Tariq replies: "Our Finance Director might appreciate that — but it doesn\'t excite me." MEP contractors care about maintenance schedules, not energy bills.',redirect:'visit_sparks'},
   sparks_vague:{text:'Too general. Tariq asks: "What benefits exactly?" Lead with the specific benefit that matters most to a contractor: reduced call-outs.',redirect:'visit_sparks'}
 };
@@ -383,7 +383,18 @@ function renderScene(id){
     const btn=document.createElement('button');
     btn.className='choice-btn';
     btn.innerHTML=`<span class="choice-label">${c.label}</span><span>${c.text}</span>`;
-    btn.addEventListener('click',()=>choose(c.next,c.correct,id,c.label,c.text));
+    let tapped=false;
+    btn.addEventListener('touchstart',()=>{tapped=false;},{passive:true});
+    btn.addEventListener('touchmove',()=>{tapped=true;},{passive:true});
+    btn.addEventListener('touchend',(e)=>{
+      if(tapped)return;
+      e.preventDefault();
+      choose(c.next,c.correct,id,c.label,c.text);
+    });
+    btn.addEventListener('click',(e)=>{
+      if(e.pointerType==='touch')return;
+      choose(c.next,c.correct,id,c.label,c.text);
+    });
     choicesEl.appendChild(btn);
   });
 }
